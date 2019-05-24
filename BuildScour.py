@@ -12,7 +12,7 @@ formatter=logging.Formatter('%(asctime)s [%(levelname)s]  %(message)s')
 
 #Argument Parsing 
 parser = argparse.ArgumentParser(description='Scour CI Build Logs')
-parser.add_argument('--org', dest='org', type=str, help='organizations github handle')
+parser.add_argument('-l', dest='link', type=str, help='organizations github handle')
 parser.add_argument('-v', dest='verbose', help='Show verbose output', action='store_false')
 parser.add_argument('--log', dest='log', help='store output in file', type=str)
 parser.add_argument('-o', dest='output', help='stores retrived log files in folder', type=str)
@@ -27,7 +27,7 @@ else:
 if args.log:
     file_handler=logging.FileHandler(args.log)
     file_handler.setFormatter(formatter)
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
     logger.addHandler(file_handler)
 
 stream_handler=logging.StreamHandler(stdout)
@@ -37,7 +37,7 @@ logger.addHandler(stream_handler)
 
 #Check Github link and token
 
-if not args.org:
+if not args.link:
     logging.error("Github profile Not Provided")
     parser.print_usage()
     exit(1)
@@ -65,14 +65,26 @@ if not os.path.exists(args.output):
     os.makedirs(args.output)
 
 
-logger.info(f"Scouring {args.org} profile")
+logger.info(f"Scouring {args.link} profile")
 
-#members = requests.get(f"https://api.github.com/orgs/{args.org}/members", headers={'Authorization': f'token {token}'})
-repositories = requests.get(f"https://api.github.com/orgs/{args.org}/repos", headers={'Authorization': f'token {token}'})
-to_check = [repo['full_name'] for repo in repositories.json()]
+
+# Find Repos on github
+
+#members = requests.get(f"https://api.github.com/orgs/{args.link}/members", headers={'Authorization': f'token {token}'})
+org_repositories = requests.get(f"https://api.github.com/orgs/{args.link}/repos", headers={'Authorization': f'token {token}'})
+user_repositories = requests.get(f"https://api.github.com/users/{args.link}/repos", headers={'Authorization': f'token {token}'})
+
+if 'message' not in org_repositories.json():
+    to_check = [repo['full_name'] for repo in org_repositories.json()] 
+else:
+    to_check = [repo['full_name'] for repo in user_repositories.json()]
 
 logger.info(f'Found {len(to_check)} Repos')
 
+
+
+#Find github repos on Travis
+logger.info("Scouring Travis-CI")
 for repo in to_check:
     builds = requests.get(f'http://api.travis-ci.org/repos/{repo}/builds').json()
     if not builds:
@@ -86,9 +98,35 @@ for repo in to_check:
             if not os.path.exists(output_path+repo):
                 logger.debug(f"Making Directory {output_path+repo}")
                 os.makedirs(output_path+repo)
-            with open(output_path+repo+str(build['id'])+'.txt',"w+") as f:
+            with open(output_path+repo+'/'+str(build['id'])+'-travis.txt',"w+") as f:
                 f.write(str(requests.get(f"https://api.travis-ci.org/v3/job/{str(int(build['id'])+1)}/log.txt").text))
 
 
+# Find github repos on circle-ci
+logger.info("Scouring Circle-CI")
+for repo in to_check:
+    builds = requests.get(f'https://circleci.com/api/v1.1/project/github/{repo}').json()
+    if builds == {'message': 'Project not found'}:
+        logger.debug(f"NO Builds exist for {repo} on Circle-CI")
+    else:
+        logger.info(f"Found {len(builds)} builds for {repo} on Circle CI")
+        logger.debug(f"----------------------------------------------------\n\n\n{builds}\n\n\n")
+        logger.info(f"Downloading build logs for {repo} in {output_path+repo}")
+        for build in builds:
+            logger.debug(f"Saving build {build['build_num']}")    
+            if not os.path.exists(output_path+repo):
+                logger.debug(f"Making Directory {output_path+repo}")
+                os.makedirs(output_path+repo)
+            build_details = requests.get(f"https://circleci.com/api/v1.1/project/github/{repo}/{str(build['build_num'])}").json()
+            for step in build_details['steps']:
+                for action in step['actions']:
+                    if 'output_url' in action:
+                        with open(output_path+repo+'/'+str(build['build_num'])+'-circle.txt',"a+") as f:
+                            f.write(str(requests.get(action['output_url']).json()[0]['message']))
+
+
+                    
+            
+                
                 
         
