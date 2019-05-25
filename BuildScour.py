@@ -110,27 +110,32 @@ for repo in to_check:
                 logger.debug(f"Making Directory {output_path+repo}")
                 os.makedirs(output_path+repo)
             with open(output_path+repo+'/'+str(build['id'])+'-travis.txt',"w+") as f:
-                f.write(str(requests.get(f"https://api.travis-ci.org/v3/job/{str(int(build['id'])+1)}/log.txt").text))
-
+                try:
+                    f.write(str(requests.get(f"https://api.travis-ci.org/v3/job/{str(int(build['id'])+1)}/log.txt").text))
+                except Exception:
+                    logger.error(f"Error Fetching Build Logs got {str(int(build['id'])+1)}")
 
 # Find github repos on circle-ci
 logger.info("Scouring Circle-CI")
 for repo in to_check:
-    builds = requests.get(f'https://circleci.com/api/v1.1/project/github/{repo}').json()
-    if builds == {'message': 'Project not found'}:
-        logger.debug(f"NO Builds exist for {repo} on Circle-CI")
-    else:
-        logger.info(f"Found {len(builds)} builds for {repo} on Circle CI")
-        logger.debug(f"----------------------------------------------------\n\n\n{builds}\n\n\n")
-        logger.info(f"Downloading build logs for {repo} in {output_path+repo}")
-        for build in builds:
-            logger.debug(f"Saving build {build['build_num']}")    
-            if not os.path.exists(output_path+repo):
-                logger.debug(f"Making Directory {output_path+repo}")
-                os.makedirs(output_path+repo)
-            build_details = requests.get(f"https://circleci.com/api/v1.1/project/github/{repo}/{str(build['build_num'])}").json()
-            for step in build_details['steps']:
-                for action in step['actions']:
-                    if 'output_url' in action:
-                        with open(output_path+repo+'/'+str(build['build_num'])+'-circle.txt',"a+") as f:
-                            f.write(str(requests.get(action['output_url']).json()[0]['message']))
+    try:
+        builds = requests.get(f'https://circleci.com/api/v1.1/project/github/{repo}').json()
+        if builds == {'message': 'Project not found'}:
+            logger.debug(f"NO Builds exist for {repo} on Circle-CI")
+        else:
+            logger.info(f"Found {len(builds)} builds for {repo} on Circle CI")
+            logger.debug(f"----------------------------------------------------\n\n\n{builds}\n\n\n")
+            logger.info(f"Downloading build logs for {repo} in {output_path+repo}")
+            for build in builds:
+                logger.debug(f"Saving build {build['build_num']}")    
+                if not os.path.exists(output_path+repo):
+                    logger.debug(f"Making Directory {output_path+repo}")
+                    os.makedirs(output_path+repo)
+                build_details = requests.get(f"https://circleci.com/api/v1.1/project/github/{repo}/{str(build['build_num'])}").json()
+                for step in build_details['steps']:
+                    for action in step['actions']:
+                        if 'output_url' in action:
+                            with open(output_path+repo+'/'+str(build['build_num'])+'-circle.txt',"a+") as f:
+                                f.write(str(requests.get(action['output_url']).json()[0]['message']))
+    except Exception:
+        logger.error("Error fetching repo details")
