@@ -13,7 +13,8 @@ formatter=logging.Formatter('%(asctime)s [%(levelname)s]  %(message)s')
 #Argument Parsing 
 parser = argparse.ArgumentParser(description='Scour CI Build Logs')
 parser.add_argument('-l', dest='link', type=str, help='organizations github handle')
-parser.add_argument('-v', dest='verbose', help='Show verbose output', action='store_false')
+parser.add_argument('-v', dest='verbose', help='Show verbose output', action='store_true')
+parser.add_argument('-A', dest='all', help='Scan organizations peoples profile too', action='store_true')
 parser.add_argument('--log', dest='log', help='store output in file', type=str)
 parser.add_argument('-o', dest='output', help='stores retrived log files in folder', type=str)
 args = parser.parse_args()
@@ -67,7 +68,6 @@ if not os.path.exists(args.output):
 
 logger.info(f"Scouring {args.link} profile")
 
-
 # Find Repos on github
 
 #members = requests.get(f"https://api.github.com/orgs/{args.link}/members", headers={'Authorization': f'token {token}'})
@@ -76,6 +76,17 @@ user_repositories = requests.get(f"https://api.github.com/users/{args.link}/repo
 
 if 'message' not in org_repositories.json():
     to_check = [repo['full_name'] for repo in org_repositories.json()] 
+    logger.info(f"Found {len(to_check)} repos in the Organization")
+    if args.all:
+        logger.info("Finding users associated with the organization")
+        org_members = requests.get(f"https://api.github.com/orgs/{args.link}/members", headers={'Authorization': f'token {token}'})
+        usernames = [member['login'] for member in org_members.json()]
+        logger.info(f"Found {len(usernames)} users in organization")
+        for user in usernames:
+            user_repositories = requests.get(f"https://api.github.com/users/{user}/repos", headers={'Authorization': f'token {token}'})
+            user_repo_list = [repo['full_name'] for repo in user_repositories.json()]
+            to_check = to_check + user_repo_list
+
 else:
     to_check = [repo['full_name'] for repo in user_repositories.json()]
 
@@ -123,10 +134,3 @@ for repo in to_check:
                     if 'output_url' in action:
                         with open(output_path+repo+'/'+str(build['build_num'])+'-circle.txt',"a+") as f:
                             f.write(str(requests.get(action['output_url']).json()[0]['message']))
-
-
-                    
-            
-                
-                
-        
