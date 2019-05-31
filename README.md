@@ -8,11 +8,23 @@ Scours CI Build logs for juicy information
 ```
  export GITHUB_TOKEN=[oauth token]
 ```
-
-
+### Use PyPi Package:
 ```
-
-usage: BuildScour.py [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
+pip install BuildScour
+```
+```
+python -m BuildScour [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
+```
+### Use from Source:
+```
+git clone https://github.com/darshkpatel/BuildScour && cd BuildScour
+```
+```
+python BuildScour.py [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
+```
+### Detailed Usage
+```
+usage: BuildScour [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
 
 Scour CI Build Logs
 
@@ -27,7 +39,11 @@ optional arguments:
 ```
 
 #### Example Usage
+To Scour `RocketChat`'s github repositories:
 
 ```
 python BuildScour.py -l RocketChat -A -o ./BuildLogs/ --log rocket.log
+```
+```
+python -m BuildScour.py RocketChat -A -o ./BuildLogs/ --log rocket.log
 ```
