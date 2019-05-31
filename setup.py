@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="BuildScour",
-    version="1.0.0",
+    version="1.0.1",
     license='MIT',  
-    keywords = ['CI', 'RECONNAISSANCE', 'TRAVIS','LOGS'],
+    keywords = ['CI', 'RECONNAISSANCE', 'TRAVIS','LOGS','CIRCLE-CI'],
     author="Darsh Patel",
     author_email="darshkpatel@gmail.com",
     description="Scours CI Build logs for juicy information",

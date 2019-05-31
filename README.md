@@ -12,7 +12,7 @@ Scours CI Build logs for juicy information
 
 ```
 
-usage: BuildScour.py [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
+usage: python -m BuildScour [-h] [-l LINK] [-v] [-A] [--log LOG] [-o OUTPUT]
 
 Scour CI Build Logs
 
@@ -29,5 +29,5 @@ optional arguments:
 #### Example Usage
 
 ```
-python BuildScour.py -l RocketChat -A -o ./BuildLogs/ --log rocket.log
+python -m BuildScour -l RocketChat -A -o ./BuildLogs/ --log rocket.log
 ````
