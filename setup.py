@@ -5,12 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="BuildScour",
-    version="1.0.1",
+    version="1.0.2",
     license='MIT',  
     keywords = ['CI', 'RECONNAISSANCE', 'TRAVIS','LOGS','CIRCLE-CI'],
     author="Darsh Patel",
     author_email="darshkpatel@gmail.com",
-    description="Scours CI Build logs for juicy information",
+    description="Scours CI Build logs for github Organizations/Users",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/darshkpatel/BuildScour",
