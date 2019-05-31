@@ -1,6 +1,7 @@
 #Developed by darshkpatel 
 
 import os
+import sys
 import logging
 import requests
 import argparse
@@ -11,14 +12,17 @@ logger=logging.getLogger(__name__)
 formatter=logging.Formatter('%(asctime)s [%(levelname)s]  %(message)s')
 
 #Argument Parsing 
-parser = argparse.ArgumentParser(description='Scour CI Build Logs')
+parser = argparse.ArgumentParser('BuildScour', description='Scour CI Build Logs')
 parser.add_argument('-l', dest='link', type=str, help='organizations github handle')
 parser.add_argument('-v', dest='verbose', help='Show verbose output', action='store_true')
 parser.add_argument('-A', dest='all', help='Scan organizations peoples profile too', action='store_true')
 parser.add_argument('--log', dest='log', help='store output in file', type=str)
 parser.add_argument('-o', dest='output', help='stores retrived log files in folder', type=str)
-args = parser.parse_args()
 
+args = parser.parse_args()
+if len(sys.argv) < 2:
+    parser.print_help()
+    sys.exit(1)
 #Setup Logging 
 if args.verbose:
     logger.setLevel(logging.DEBUG)
@@ -36,8 +40,8 @@ stream_handler.setFormatter(formatter)
 stream_handler.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
-#Check Github link and token
 
+#Check Github link and token
 if not args.link:
     logging.error("Github profile Not Provided")
     parser.print_usage()
