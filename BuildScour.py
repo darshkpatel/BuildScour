@@ -43,13 +43,14 @@ if not args.link:
     parser.print_usage()
     exit(1)
 
-if not os.environ['GITHUB_TOKEN']:
+try:
+    if  os.environ['GITHUB_TOKEN']:
+        logger.info("Found github token")
+        token = os.environ['GITHUB_TOKEN']
+except KeyError:
     logger.error("Please save your github oauth token in environment variable 'GITHUB_TOKEN'")
     logger.error("use: export GITHUB_TOKEN=[oauth token]")
     exit(1)
-else:
-    logger.info("Found github token")
-    token = os.environ['GITHUB_TOKEN']
 
 if not args.output:
     logging.error("Output directory Not Provided")
