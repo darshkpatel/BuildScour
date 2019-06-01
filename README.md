@@ -1,5 +1,8 @@
-# Build Scour
+# Build Scour 
 Scours CI Build logs for github Organizations/Users
+[![PyPI
+version](https://badge.fury.io/py/BuildScour.svg)](https://badge.fury.io/py/BuildScour)
+
 
 # Usage
 
