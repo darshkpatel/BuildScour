@@ -1,7 +1,9 @@
-# Build Scour
+## Build Scour [![PyPI version](https://badge.fury.io/py/BuildScour.svg)](https://badge.fury.io/py/BuildScour)
 Scours CI Build logs for github Organizations/Users
 
-# Usage
+
+
+## Usage
 
 * NOTE: please Set github oauth token in environment variable `GITHUB_TOKEN` 
 
