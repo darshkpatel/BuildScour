@@ -4,3 +4,5 @@ venv
 .vscode
 BuildLogs
 *.log
+BuildScour.egg-info
+dist
