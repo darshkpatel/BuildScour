@@ -37,7 +37,6 @@ stream_handler.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
 #Check Github link and token
-
 if not args.link:
     logging.error("Github profile Not Provided")
     parser.print_usage()
@@ -52,6 +51,7 @@ except KeyError:
     logger.error("use: export GITHUB_TOKEN=[oauth token]")
     exit(1)
 
+# Check Output Directory
 if not args.output:
     logging.error("Output directory Not Provided")
     parser.print_usage()
@@ -69,9 +69,8 @@ if not os.path.exists(args.output):
 
 logger.info(f"Scouring {args.link} profile")
 
-# Find Repos on github
 
-#members = requests.get(f"https://api.github.com/orgs/{args.link}/members", headers={'Authorization': f'token {token}'})
+# Find all Repos on github using Github REST API v3
 org_repositories = requests.get(f"https://api.github.com/orgs/{args.link}/repos", headers={'Authorization': f'token {token}'})
 user_repositories = requests.get(f"https://api.github.com/users/{args.link}/repos", headers={'Authorization': f'token {token}'})
 
@@ -115,6 +114,7 @@ for repo in to_check:
                     f.write(str(requests.get(f"https://api.travis-ci.org/v3/job/{str(int(build['id'])+1)}/log.txt").text))
                 except Exception:
                     logger.error(f"Error Fetching Build Logs got {str(int(build['id'])+1)}")
+
 
 # Find github repos on circle-ci
 logger.info("Scouring Circle-CI")
