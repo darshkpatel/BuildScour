@@ -37,8 +37,8 @@ optional arguments:
   -A          Scan organizations peoples profile too
   --log LOG   store output in file
   -o OUTPUT   stores retrived log files in folder
-
-```
+  
+  ```
 
 #### Example Usage
 To Scour `RocketChat`'s github repositories:
@@ -49,3 +49,9 @@ python BuildScour.py -l RocketChat -A -o ./BuildLogs/ --log rocket.log
 ```
 python -m BuildScour.py RocketChat -A -o ./BuildLogs/ --log rocket.log
 ```
+
+
+#### What next ?
+
+After getting saving all the logs locally, you can analyze the logs manually or use grep to find sensitive information. 
+There are a couple of word lists containing common environment variables containing API keys and passwords in the `Keywords` folder.  
