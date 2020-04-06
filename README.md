@@ -1,6 +1,7 @@
 ## Build Scour [![PyPI version](https://badge.fury.io/py/BuildScour.svg)](https://badge.fury.io/py/BuildScour)
 Scours CI Build logs for github Organizations/Users
 
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdarshkpatel%2FBuildScour&cloudshell_git_branch=master&cloudshell_tutorial=README.md)
 
 
 ## Usage
