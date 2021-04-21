@@ -1,8 +1,11 @@
-## Build Scour [![PyPI version](https://badge.fury.io/py/BuildScour.svg)](https://badge.fury.io/py/BuildScour)
-Scours CI Build logs for github Organizations/Users
+![BuildScour](https://socialify.git.ci/darshkpatel/BuildScour/image?description=1&descriptionEditable=Scour%20popular%20CI%20tools%20build%20logs%20for%20sensitive%20information&language=1&owner=1&theme=Light)
 
-[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdarshkpatel%2FBuildScour&cloudshell_git_branch=master&cloudshell_tutorial=README.md)
 
+<p align="center">
+<a href="https://pypi.org/project/BuildScour/"><img alt="PyPI" src="https://img.shields.io/pypi/v/BuildScour?label=PyPi%20Package%20&style=for-the-badge"></a>
+<img alt="PyPI - License" src="https://img.shields.io/pypi/l/BuildScour?style=for-the-badge">
+<a href="https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdarshkpatel%2FBuildScour&cloudshell_git_branch=master&cloudshell_tutorial=README.md"><img src="https://img.shields.io/badge/Google%20Cloud-Open%20in%20Goole%20Cloud%20Shell-blue?style=for-the-badge&logo=google-cloud" /></a>
+</p>
 
 ## Usage
 
